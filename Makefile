@@ -1,29 +1,24 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -I./include
+CFLAGS = -Wall -Wextra -Iinclude
 SRCDIR = src
 OBJDIR = obj
 BINDIR = bin
 TARGET = $(BINDIR)/program
 
-SOURCES = $(wildcard $(SRCDIR)/*.c)
-OBJECTS = $(SOURCES:$(SRCDIR)/=$(OBJDIR)/)
+_OBJS = max_digit_sum.o student.o car.o main.o
+OBJS = $(patsubst %,$(OBJDIR)/%,)
 
-$(TARGET): $(OBJECTS) | $(BINDIR)
-	$(CC) -o $@ $(OBJECTS)
+all: $(TARGET)
 
-$(OBJDIR)/: $(SRCDIR)/ | $(OBJDIR)
+$(TARGET): $(OBJS)
+	mkdir -p $(BINDIR)
+	$(CC) $(OBJS) -o $@
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJDIR):
-	mkdir -p $(OBJDIR)
-
-$(BINDIR):
-	mkdir -p $(BINDIR)
-
 clean:
-	rm -rf $(OBJDIR)/*.o $(BINDIR)/*
+	rm -rf $(OBJDIR) $(BINDIR)
 
-run: $(TARGET)
-	./$(TARGET)
-
-.PHONY: clean run
+.PHONY: all clean

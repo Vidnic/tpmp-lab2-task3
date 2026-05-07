@@ -1,0 +1,15 @@
+name: C Build
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      run: |
+        mkdir -p obj bin
+        gcc -Wall -Wextra -Iinclude -c src/*.c
+        gcc -o bin/program *.o
+        mv *.o obj/
+    - name: Run
+      run: ./bin/program
